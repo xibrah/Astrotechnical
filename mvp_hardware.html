@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sun-Synchronous Orbital Depot | Mission Definition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #0a0e1a;
+            --color-surface: #151b2e;
+            --color-accent: #00d4ff;
+            --color-accent-dim: #0088aa;
+            --color-warning: #ff6b35;
+            --color-success: #00ff88;
+            --color-text: #e8edf5;
+            --color-text-dim: #8b95ab;
+            --color-border: #2a3548;
+            --font-display: 'Orbitron', monospace;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --font-body: 'Work Sans', sans-serif;
+        }
+
+```
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background: var(--color-bg);
+        color: var(--color-text);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    .stars {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: white;
+        border-radius: 50%;
+        animation: twinkle 3s infinite;
+    }
+
+    @keyframes twinkle {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 1; }
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 60px;
+        padding: 60px 20px 40px;
+        border-bottom: 2px solid var(--color-border);
+        animation: fadeInDown 1s ease-out;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    h1 {
+        font-family: var(--font-display);
+        font-size: 3.5rem;
+        font-weight: 900;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-success) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+
+    .subtitle {
+        font-family: var(--font-mono);
+        font-size: 1.1rem;
+        color: var(--color-text-dim);
+        letter-spacing: 0.1em;
+        margin-bottom: 10px;
+    }
+
+    .mission-badge {
+        display: inline-block;
+        padding: 8px 20px;
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid var(--color-accent);
+        border-radius: 20px;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        color: var(--color-accent);
+        margin-top: 20px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+    }
+
+    .section {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 40px;
+        animation: fadeInUp 0.8s ease-out;
+        animation-fill-mode: both;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--color-accent), transparent);
+    }
+
+    .section:nth-child(1) { animation-delay: 0.1s; }
+    .section:nth-child(2) { animation-delay: 0.2s; }
+    .section:nth-child(3) { animation-delay: 0.3s; }
+    .section:nth-child(4) { animation-delay: 0.4s; }
+    .section:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    h2 {
+        font-family: var(--font-display);
+        font-size: 1.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--color-accent);
+        margin-bottom: 25px;
+        border-bottom: 2px solid var(--color-border);
+        padding-bottom: 15px;
+    }
+
+    h3 {
+        font-family: var(--font-mono);
+        font-size: 1.2rem;
+        color: var(--color-text);
+        margin: 25px 0 15px;
+        font-weight: 600;
+    }
+
+    p {
+        color: var(--color-text-dim);
+        margin-bottom: 15px;
+        font-size: 1.05rem;
+        line-height: 1.8;
+    }
+
+    .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .spec-card {
+        background: rgba(0, 212, 255, 0.05);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .spec-card:hover {
+        border-color: var(--color-accent);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+    }
+
+    .spec-label {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        color: var(--color-text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+    }
+
+    .spec-value {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        color: var(--color-accent);
+        font-weight: 700;
+    }
+
+    .spec-unit {
+        font-size: 1rem;
+        color: var(--color-text-dim);
+        margin-left: 5px;
+    }
+
+    .mass-breakdown {
+        margin: 30px 0;
+    }
+
+    .mass-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .mass-item:last-child {
+        border-bottom: none;
+        font-weight: 600;
+        color: var(--color-accent);
+    }
+
+    .mass-label {
+        flex: 1;
+        font-family: var(--font-mono);
+        font-size: 0.95rem;
+    }
+
+    .mass-bar {
+        flex: 2;
+        height: 30px;
+        background: rgba(0, 212, 255, 0.1);
+        border-radius: 4px;
+        margin: 0 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .mass-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--color-accent), var(--color-success));
+        transition: width 1s ease-out;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 10px;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .mass-value {
+        font-family: var(--font-mono);
+        font-size: 1rem;
+        font-weight: 600;
+        min-width: 80px;
+        text-align: right;
+    }
+
+    .key-features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin: 30px 0;
+    }
+
+    .feature {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(0, 255, 136, 0.05) 100%);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .feature:hover {
+        border-color: var(--color-accent);
+        transform: scale(1.03);
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+
+    .feature-title {
+        font-family: var(--font-mono);
+        font-size: 1.1rem;
+        color: var(--color-accent);
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .feature-desc {
+        font-size: 0.95rem;
+        color: var(--color-text-dim);
+        line-height: 1.6;
+    }
+
+    .highlight-box {
+        background: rgba(255, 107, 53, 0.1);
+        border-left: 4px solid var(--color-warning);
+        padding: 20px;
+        margin: 25px 0;
+        border-radius: 4px;
+    }
+
+    .highlight-box p {
+        margin: 0;
+        color: var(--color-text);
+    }
+
+    .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 25px 0;
+    }
+
+    .tech-tag {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        padding: 8px 16px;
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid var(--color-accent-dim);
+        border-radius: 20px;
+        color: var(--color-accent);
+        transition: all 0.3s ease;
+    }
+
+    .tech-tag:hover {
+        background: rgba(0, 212, 255, 0.2);
+        border-color: var(--color-accent);
+        transform: translateY(-2px);
+    }
+
+    footer {
+        text-align: center;
+        padding: 40px 20px;
+        border-top: 2px solid var(--color-border);
+        margin-top: 60px;
+    }
+
+    .footer-text {
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+        color: var(--color-text-dim);
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+        }
+
+        .section {
+            padding: 25px;
+        }
+
+        .specs-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .mass-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .mass-bar {
+            width: 100%;
+            margin: 10px 0;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+```
+<div class="container">
+    <header>
+        <div class="subtitle">Mission Definition</div>
+        <h1>Sun-Synchronous<br>Orbital Depot</h1>
+        <div class="mission-badge">MVP Propellant Servicing Platform</div>
+    </header>
+
+    <main>
+        <div class="section">
+            <h2>Mission Overview</h2>
+            <p>A sun-synchronous orbital depot designed to service datacenter satellites and Earth observation constellations with propellant refueling, extending mission life and enabling active stationkeeping in high-demand orbits.</p>
+            
+            <div class="key-features">
+                <div class="feature">
+                    <div class="feature-icon">🛰️</div>
+                    <div class="feature-title">Target Market</div>
+                    <div class="feature-desc">Datacenter satellites, Earth observation birds, and communications constellations in sun-synchronous orbit requiring regular refueling for stationkeeping.</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Power-Driven Design</div>
+                    <div class="feature-desc">Sized for 5-10 kW peak operations during propellant transfer, with thermal management for waste heat rejection.</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔧</div>
+                    <div class="feature-title">Telepresence Ready</div>
+                    <div class="feature-desc">Architecture supports future robotic servicing operations including fuel line connections and module servicing.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Technical Specifications</h2>
+            
+            <div class="specs-grid">
+                <div class="spec-card">
+                    <div class="spec-label">Peak Power</div>
+                    <div class="spec-value">10<span class="spec-unit">kW</span></div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label">Baseline Power</div>
+                    <div class="spec-value">1-2<span class="spec-unit">kW</span></div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label">Solar Arrays</div>
+                    <div class="spec-value">30-40<span class="spec-unit">m²</span></div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label">Radiators</div>
+                    <div class="spec-value">60-80<span class="spec-unit">m²</span></div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label">Propellant Capacity</div>
+                    <div class="spec-value">150<span class="spec-unit">kg</span></div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label">Total Wet Mass</div>
+                    <div class="spec-value">625-710<span class="spec-unit">kg</span></div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Launch Strategy:</strong> Deploy depot empty on Rocket Lab Electron (~200-250 kg to sun-sync), then refuel in orbit. Alternative: use SpaceX rideshare for higher mass capacity.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Mass Breakdown</h2>
+            
+            <div class="mass-breakdown">
+                <div class="mass-item">
+                    <div class="mass-label">M-1000 Bus (dry)</div>
+                    <div class="mass-bar">
+                        <div class="mass-fill" style="width: 42%" data-width="42"></div>
+                    </div>
+                    <div class="mass-value">250-300 kg</div>
+                </div>
+                <div class="mass-item">
+                    <div class="mass-label">Propellant Transfer Hardware</div>
+                    <div class="mass-bar">
+                        <div class="mass-fill" style="width: 15%" data-width="15"></div>
+                    </div>
+                    <div class="mass-value">30-50 kg</div>
+                </div>
+                <div class="mass-item">
+                    <div class="mass-label">Propellant Storage (capacity)</div>
+                    <div class="mass-bar">
+                        <div class="mass-fill" style="width: 25%" data-width="25"></div>
+                    </div>
+                    <div class="mass-value">150 kg</div>
+                </div>
+                <div class="mass-item">
+                    <div class="mass-label">Solar Arrays</div>
+                    <div class="mass-bar">
+                        <div class="mass-fill" style="width: 8%" data-width="8"></div>
+                    </div>
+                    <div class="mass-value">15-20 kg</div>
+                </div>
+                <div class="mass-item">
+                    <div class="mass-label">Radiators</div>
+                    <div class="mass-bar">
+                        <div class="mass-fill" style="width: 10%" data-width="10"></div>
+                    </div>
+                    <div class="mass-value">30-40 kg</div>
+                </div>
+                <div class="mass-item">
+                    <div class="mass-label">Total Wet Mass</div>
+                    <div class="mass-bar">
+                        <div class="mass-fill" style="width: 100%" data-width="100"></div>
+                    </div>
+                    <div class="mass-value">625-710 kg</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Platform Architecture</h2>
+            
+            <h3>Momentus M-1000 Satellite Bus</h3>
+            <p>Flight-proven platform based on Vigoride heritage, providing modular configuration and rapid deployment capability.</p>
+            
+            <div class="tech-stack">
+                <div class="tech-tag">1 kW Average Power</div>
+                <div class="tech-tag">3 kW Peak Power</div>
+                <div class="tech-tag">350-800 kg Payload Capacity</div>
+                <div class="tech-tag">Mission-Configured Propulsion</div>
+                <div class="tech-tag">Dual Redundant Systems</div>
+            </div>
+
+            <h3>Propellant Handling Systems</h3>
+            <p>Electric pumps, thermal management (hydrazine melts at 2°C), pressurization, and transfer mechanisms optimized for orbital operations.</p>
+
+            <h3>Stationkeeping</h3>
+            <p>Electric propulsion for depot orbital maintenance in sun-sync environment with drag compensation.</p>
+        </div>
+
+        <div class="section">
+            <h2>Refueling Economics</h2>
+            
+            <p><strong>Delivery Vehicle:</strong> Rocket Lab Electron delivers 160-180 kg of actual propellant per flight to sun-synchronous orbit (after accounting for tankage and hardware).</p>
+            
+            <p><strong>Service Capacity:</strong> Sufficient to refuel multiple small satellites or one larger spacecraft per delivery mission, enabling extended mission life and active orbital maintenance.</p>
+
+            <div class="highlight-box">
+                <p><strong>Business Case:</strong> Growing datacenter satellite constellations and Earth observation networks require reliable in-orbit refueling infrastructure. Sun-sync orbit is increasingly crowded with commercial and government birds needing stationkeeping propellant.</p>
+            </div>
+
+            <h3>Alternative: Momentus Vigoride Flying Depot</h3>
+            <p>Photon spacecraft bus configured as mobile propellant depot with heritage avionics, power, and propulsion - potentially more mass-efficient than custom tankage.</p>
+        </div>
+
+        <div class="section">
+            <h2>Scalability Path</h2>
+            
+            <div class="key-features">
+                <div class="feature">
+                    <div class="feature-icon">📦</div>
+                    <div class="feature-title">Phase 1: MVP</div>
+                    <div class="feature-desc">Propellant servicing only. Prove depot operations, establish customer base, generate revenue.</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-title">Phase 2: Telepresence</div>
+                    <div class="feature-desc">Add robotic arms for inspection, repair, and module swap services. Higher power requirements.</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🏗️</div>
+                    <div class="feature-title">Phase 3: Metalwork</div>
+                    <div class="feature-desc">Full orbital construction capability with welding, machining, and assembly operations. Major power/thermal upgrade.</div>
+                </div>
+            </div>
+
+            <p style="margin-top: 30px; font-style: italic; color: var(--color-text);">This MVP establishes the foundation for comprehensive orbital infrastructure services, with clear upgrade paths as technology and market mature.</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-text">
+            Astrotechnical Orbital Depot | Mission Definition v1.0
+        </div>
+    </footer>
+</div>
+
+<script>
+    // Generate starfield
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        starsContainer.appendChild(star);
+    }
+
+    // Animate mass bars on load
+    window.addEventListener('load', () => {
+        const fills = document.querySelectorAll('.mass-fill');
+        fills.forEach((fill, index) => {
+            setTimeout(() => {
+                fill.style.width = fill.dataset.width + '%';
+            }, index * 100);
+        });
+    });
+</script>
+```
+
+</body>
+</html>
